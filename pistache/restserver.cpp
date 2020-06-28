@@ -3,6 +3,8 @@
 #include <pistache/http.h>
 #include <pistache/router.h>
 #include <pistache/endpoint.h>
+#include <json/json.h>
+#define _GLIBCXX_USE_CXX11_API 0
 
 using namespace std;
 using namespace Pistache;
@@ -56,9 +58,9 @@ void StatsEndpoint::start() {
 }
 void StatsEndpoint::setupRoutes() {
     using namespace Rest;
-    // Routes::Post(router, "/record/:name:value?",
+    //Routes::Post(router, "/record/:name:value?",
     //             Routes::bind(&StatsEndpoint::doRecordMetric, this));
-    Routes::Post(router, "/record",
+     Routes::Post(router, "/record",
                  Routes::bind(&StatsEndpoint::doRecordMetric, this));
     Routes::Get(router, "/value/:name",
                 Routes::bind(&StatsEndpoint::doGetMetric, this));
@@ -67,9 +69,28 @@ void StatsEndpoint::setupRoutes() {
 
 void StatsEndpoint::doRecordMetric(const Rest::Request& request,
                                    Http::ResponseWriter response) {
-    std::cout << "doRecordMetric" << std::endl;
-    cout << request.body();
-    cout << "begin name" << endl;
+    //通过url直接传递参数获取的方法
+    //if (request.query().has("name")) {
+    //    auto name = request.query().get("name").get();
+    //    cout << name << endl;
+    //} else {
+    //    cout << "null" << endl;
+    //}
+    //通过body来传递参数获取的方法，目前只支持解析json的
+    cout << request.body() << endl;
+    Json::Reader reader;
+    Json::Value value;
+    if(reader.parse(request.body(), value)){
+        cout << "Json 解析成功" << endl;
+        if(!value["name"].isNull()){
+            cout << "name: " << value["name"].asString() << endl;
+        }
+        if (!value["value"].isNull()){
+            cout << "value: " << value["value"].asString() << endl;
+        }
+    } else {
+        cout << "Json 解析失败" << endl;
+    }
     auto name = request.param(":name").as<std::string>();
     cout << "End name";
     Guard guard(metricsLock);
