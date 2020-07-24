@@ -1,6 +1,7 @@
 #!/bin/bash
 
-g++ -std=c++11 -I/usr/local/poco/include -I/usr/include/mysql/ -L/usr/local/poco/lib  -lPocoFoundation -lPocoData -lPocoDataMySQL   -Wl,-rpath=/usr/local/poco/lib  main.cpp  -o test
+#g++ -std=c++11 -I/usr/local/poco/include -I/usr/include/mysql/ -L/usr/local/poco/lib  -lPocoFoundation -lPocoData -lPocoDataMySQL   -Wl,-rpath=/usr/local/poco/lib  main.cpp  -o test
+g++ -std=c++11 -I/usr/local/poco/include -I/usr/include/mysql/ -L/usr/local/poco/lib  -lPocoFoundation -lPocoData -lPocoCrypto    -Wl,-rpath=/usr/local/poco/lib  ./rsa.cpp  -o test
 
 if [[ $? == 0 ]];then
     echo 编译成功
