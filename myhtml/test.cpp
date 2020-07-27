@@ -29,6 +29,26 @@ int main() {
     // parse html
     myhtml_parse_fragment(tree, MyENCODING_UTF_8, html, strlen(html),
                           MyHTML_TAG_DIV, MyHTML_NAMESPACE_HTML);
+    // myhtml_parse(tree, MyENCODING_UTF_8, html, strlen(html));
+
+    // print result
+    // mycore_string_raw_t str = {0};
+    // myhtml_serialization_tree_buffer(myhtml_tree_get_document(tree), &str);
+    // cout << str.data << endl;
+    //查找某个标签的
+    // myhtml_collection_t *liList = myhtml_get_nodes_by_name(tree, NULL ,"p",
+    // 3, NULL);
+    // cout << liList << endl;
+    // return 0;
+    // if (liList && liList -> list && liList -> length){
+    //     cout << liList -> length << endl;
+    //     myhtml_tree_node_t *liNode = myhtml_node_child(liList -> list[0]);
+    //     if (liNode){
+    //         const char * text = myhtml_node_text(liNode, NULL);
+    //         if (text)
+    //             cout << text << endl;
+    //     }
+    // }
     //查找key
     const char* str = "description";
     myhtml_collection_t* collection = myhtml_get_nodes_by_attribute_key(
@@ -37,24 +57,13 @@ int main() {
     for (size_t i = 0; i < collection->length; i++) {
         myhtml_tree_node_t* node = collection->list[i];
         if (node) {
-            //比赛队名
-            string name = "description";
-            myhtml_tree_attr_t* getChar =
-                myhtml_attribute_by_key(node, name.c_str(), name.length());
-            const char* attrChar = myhtml_attribute_value(getChar, NULL);
-            out << attrChar << ",";
-            //时间
-            string date = "date";
-            getChar =
-                myhtml_attribute_by_key(node, date.c_str(), date.length());
-            attrChar = myhtml_attribute_value(getChar, NULL);
-            out << attrChar << ",";
-            //分类
-            string group = "meeting_name";
-            getChar =
-                myhtml_attribute_by_key(node, group.c_str(), group.length());
-            attrChar = myhtml_attribute_value(getChar, NULL);
-            out << attrChar << ",";
+            myhtml_tree_attr_t* getChar = myhtml_node_attribute_first(node);
+            while (getChar) {
+                const char* attrChar = myhtml_attribute_value(getChar, NULL);
+                out << attrChar << ",";
+                // cout << attrChar << endl;
+                getChar = myhtml_attribute_next(getChar);
+            }
             out << endl;
             const char* child = "bvs-button-sport market-outcome";
             myhtml_collection_t* childCollection =
@@ -70,7 +79,7 @@ int main() {
                         const char* text = myhtml_node_text(textNode, NULL);
                         if (text) {
                             out << text << ":";
-                            // cout << text << endl;
+                            //cout << text << endl;
                         }
                     }
                     childNode = myhtml_node_next(childNode);
@@ -78,6 +87,7 @@ int main() {
                 out << "************************";
             }
             out << endl;
+            // cout << childCollection->length << endl;
             // string attr = "description";
             // string attr = "date";
             // myhtml_tree_attr_t *gets_attr = myhtml_attribute_by_key(node,

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-g++  -I/usr/local/myhtml/include  -L/usr/local/myhtml/lib  -lmyhtml    -Wl,-rpath=/usr/local/myhtml/lib  ./main.cpp  -o test
+g++  -g -I/usr/local/myhtml/include  -L/usr/local/myhtml/lib  -lmyhtml    -Wl,-rpath=/usr/local/myhtml/lib  ./main.cpp  -o test
 
 if [[ $? == 0 ]];then
     echo 编译成功
